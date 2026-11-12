@@ -11,6 +11,7 @@
     "render:vertical": "node scripts/render.mjs vertical",
     "render:horizontal": "node scripts/render.mjs horizontal",
     "render:thumbnail": "node scripts/render.mjs thumbnail",
+    "render:sans-musique": "node scripts/render.mjs sansmusique",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

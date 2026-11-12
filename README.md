@@ -22,6 +22,7 @@ npm install
 npm run stills      # images de contrôle → out/stills/ (2, 6, 12, 22, 28 s)
 npm run render      # tout : vertical + horizontal + miniature
 npm run render:vertical | render:horizontal | render:thumbnail
+npm run render:sans-musique   # versions muettes, pour ajouter un son sous licence dans TikTok / YouTube
 npm run studio      # aperçu interactif dans le navigateur
 ```
 

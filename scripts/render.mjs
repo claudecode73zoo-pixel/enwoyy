@@ -5,6 +5,7 @@
  *   node scripts/render.mjs vertical    → out/trailer-vertical-1080x1920.mp4
  *   node scripts/render.mjs horizontal  → out/trailer-horizontal-1920x1080.mp4
  *   node scripts/render.mjs thumbnail   → out/miniature-1280x720.png
+ *   node scripts/render.mjs sansmusique → versions muettes (pour ajouter un son directement dans TikTok/YouTube)
  *   node scripts/render.mjs stills      → out/stills/*.png (contrôle à 2, 6, 12, 22 et 28 s)
  */
 import { execFileSync } from 'node:child_process';
@@ -38,6 +39,10 @@ const remotion = (...args) =>
 const jobs = {
   vertical: () => remotion('render', 'src/index.ts', 'TrailerVertical', 'out/trailer-vertical-1080x1920.mp4'),
   horizontal: () => remotion('render', 'src/index.ts', 'TrailerHorizontal', 'out/trailer-horizontal-1920x1080.mp4'),
+  sansmusique: () => {
+    remotion('render', 'src/index.ts', 'TrailerVertical', 'out/trailer-vertical-sans-musique.mp4', '--muted');
+    remotion('render', 'src/index.ts', 'TrailerHorizontal', 'out/trailer-horizontal-sans-musique.mp4', '--muted');
+  },
   thumbnail: () => remotion('still', 'src/index.ts', 'Thumbnail', 'out/miniature-1280x720.png'),
   stills: () => {
     for (const comp of ['TrailerVertical', 'TrailerHorizontal']) {
@@ -52,7 +57,7 @@ const jobs = {
 const order = target === 'all' ? ['vertical', 'horizontal', 'thumbnail'] : [target];
 for (const j of order) {
   if (!jobs[j]) {
-    console.error(`Cible inconnue : ${j}. Choix : all | vertical | horizontal | thumbnail | stills`);
+    console.error(`Cible inconnue : ${j}. Choix : all | vertical | horizontal | thumbnail | sansmusique | stills`);
     process.exit(1);
   }
   console.log(`\n▶ ${j}`);
