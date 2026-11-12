@@ -12,3 +12,10 @@
 | Motion Design Skills | github.com/iart-ai/motion-design-skills | animation-principles, after-effects, remotion-video, logo-animation, … |
 
 Mise à jour : `npx skills add <owner>/<repo> -a claude-code --copy -y`
+
+## Autres
+
+| Outil | Dépôt source | Contenu copié |
+|---|---|---|
+| Ponytail | github.com/DietrichGebert/ponytail | skills ponytail, ponytail-review, ponytail-audit, ponytail-help, ponytail-debt, ponytail-gain (sans hooks) |
+| Ruflo (core) | github.com/ruvnet/ruflo (plugins/ruflo-core) | skills discover-plugins, init-project, ruflo-doctor, ruflo-status, witness ; agents coder, researcher, reviewer, witness-curator dans .claude/agents (sans hooks ni serveur MCP) |
