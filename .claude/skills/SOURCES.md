@@ -19,3 +19,4 @@ Mise à jour : `npx skills add <owner>/<repo> -a claude-code --copy -y`
 |---|---|---|
 | Ponytail | github.com/DietrichGebert/ponytail | skills ponytail, ponytail-review, ponytail-audit, ponytail-help, ponytail-debt, ponytail-gain (sans hooks) |
 | Ruflo (core) | github.com/ruvnet/ruflo (plugins/ruflo-core) | skills discover-plugins, init-project, ruflo-doctor, ruflo-status, witness ; agents coder, researcher, reviewer, witness-curator dans .claude/agents (sans hooks ni serveur MCP) |
+| Caveman | github.com/JuliusBrussee/caveman | 24 skills (caveman, caveman-commit, caveman-review, ultracave, …) ; agents cavecrew-builder, cavecrew-investigator, cavecrew-reviewer (sans hooks ni proxy) |
