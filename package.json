@@ -1,0 +1,26 @@
+{
+  "name": "trailer-noel-tycoon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Trailer vidéo (Remotion) pour une map Fortnite Créatif / UEFN Tycoon de Noël",
+  "scripts": {
+    "placeholders": "python3 scripts/make_placeholders.py",
+    "studio": "remotion studio",
+    "stills": "node scripts/render.mjs stills",
+    "render": "node scripts/render.mjs all",
+    "render:vertical": "node scripts/render.mjs vertical",
+    "render:horizontal": "node scripts/render.mjs horizontal",
+    "render:thumbnail": "node scripts/render.mjs thumbnail",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.538"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}
