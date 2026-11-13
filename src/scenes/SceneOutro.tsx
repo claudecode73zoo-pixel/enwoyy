@@ -22,7 +22,7 @@ export const SceneOutro: React.FC = () => {
         <div
           style={{
             width: 1000,
-            marginTop: -120,
+            marginTop: -420,
             opacity: s,
             transform: `translateY(${(1 - s) * 120}px) scale(${scale * (1 + pulse * 0.012)})`,
             filter: 'drop-shadow(0 40px 40px rgba(0,0,0,0.6))',
@@ -31,7 +31,7 @@ export const SceneOutro: React.FC = () => {
           <Img src={staticFile(IMAGES.profil)} style={{width: '100%', display: 'block'}} />
         </div>
       </AbsoluteFill>
-      <div style={{position: 'absolute', bottom: 260, left: 0, right: 0}}>
+      <div style={{position: 'absolute', bottom: 240, left: 0, right: 0}}>
         <Letters text="Reste" start={BEAT} size={300} color={COLORS.white} />
         <Letters text="tuned." start={BEAT + 8} size={300} gradient style={{marginTop: 10}} />
       </div>

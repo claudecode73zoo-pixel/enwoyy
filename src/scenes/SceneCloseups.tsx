@@ -22,11 +22,11 @@ const Shot: React.FC<{c: Closeup; index: number}> = ({c, index}) => {
     <AbsoluteFill>
       <Background x={index === 1 ? 30 : 70} y={index === 2 ? 40 : 55} intensity={0.9} />
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
-        <div style={{width: 1000, transform: `translateX(${sway}px) scale(${zoom * (1 + pulse * 0.02)}) translate(${dx}%, ${dy}%)`}}>
+        <div style={{width: 1000, flexShrink: 0, transform: `translateX(${sway}px) scale(${zoom * (1 + pulse * 0.02)}) translate(${dx}%, ${dy}%)`}}>
           <Img src={staticFile(c.image)} style={{width: '100%', display: 'block'}} />
         </div>
       </AbsoluteFill>
-      <div style={{position: 'absolute', bottom: 170, left: 0, right: 0, textShadow: `0 8px 40px ${COLORS.black}`}}>
+      <div style={{position: 'absolute', bottom: 170, left: 0, right: 0, filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.85))'}}>
         <Letters text={c.word} start={2} size={wordSize} gradient={index !== 1} color={COLORS.white} />
       </div>
       <div style={{position: 'absolute', top: 130, left: 70, color: COLORS.orangeLight, fontFamily: 'TNAnton, Impact', fontSize: 48, letterSpacing: 6}}>

@@ -18,10 +18,18 @@ export const FONT_FAMILY = 'TNAnton, Impact, "Arial Narrow", sans-serif';
 
 // ---- Images (dans /public) ----
 export const IMAGES = {
-  profil: 'tn-profil.png',
-  face: 'tn-face.png',
-  semelle: 'tn-semelle.png',
+  profil: 'tn-profil.png', // profil extérieur (pointe à droite)
+  face: 'tn-face.png', // vue de face
+  semelle: 'tn-semelle.png', // profil opposé, cadré sur l'unité de semelle
+  talon: 'tn-talon.png', // 3/4 arrière : bulle d'air + badge Tn
 } as const;
+
+// ---- Rotation 360° (36 vues détourées, public/tn-360/01.webp … 36.webp) ----
+export const SPIN_COUNT = 36;
+export const spinImage = (index: number) => {
+  const i = ((Math.round(index) % SPIN_COUNT) + SPIN_COUNT) % SPIN_COUNT;
+  return `tn-360/${String(i + 1).padStart(2, '0')}.webp`;
+};
 
 // ---- Durées des scènes (en frames) ----
 export const SCENES = {
@@ -37,9 +45,9 @@ export const FADE_OUT_FRAMES = 30;
 
 // ---- Gros plans : durées (frames), mot-clé, image, point focal (0-1) et zoom ----
 export const CLOSEUPS = [
-  {word: 'AIR', image: IMAGES.profil, focus: {x: 0.22, y: 0.7}, zoom: 3.2, duration: 3 * BEAT},
-  {word: 'TUNED', image: IMAGES.face, focus: {x: 0.5, y: 0.5}, zoom: 2.2, duration: 3 * BEAT},
-  {word: 'ORANGE', image: IMAGES.semelle, focus: {x: 0.5, y: 0.5}, zoom: 1.5, duration: 2 * BEAT},
+  {word: 'AIR', image: IMAGES.talon, focus: {x: 0.76, y: 0.8}, zoom: 2.2, duration: 3 * BEAT},
+  {word: 'TUNED', image: IMAGES.face, focus: {x: 0.5, y: 0.62}, zoom: 1.05, duration: 3 * BEAT},
+  {word: 'ORANGE', image: IMAGES.semelle, focus: {x: 0.42, y: 0.84}, zoom: 2.3, duration: 2 * BEAT},
 ] as const;
 
 export const SLOGAN = 'Reste tuned.';

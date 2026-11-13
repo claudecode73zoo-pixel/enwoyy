@@ -2,10 +2,10 @@ import React from 'react';
 import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Background} from '../components/Background';
 import {Letters} from '../components/Letters';
-import {BEAT, COLORS, IMAGES, WIDTH} from '../constants';
+import {BEAT, COLORS, HEIGHT, IMAGES, WIDTH} from '../constants';
 import {beatPulse, easeOut, springVelocityBlur} from '../utils';
 
-const SHOE_W = 1060;
+const SHOE_W = 900;
 const GROUND_Y = 1160;
 const CFG = {damping: 9, stiffness: 110, mass: 0.9};
 
@@ -38,10 +38,10 @@ export const SceneHero: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            left: WIDTH / 2 - 420 + shadowX,
+            left: WIDTH / 2 - 400 + shadowX,
             top: GROUND_Y - 40,
-            width: 840,
-            height: 110,
+            width: 800,
+            height: 100,
             borderRadius: '50%',
             background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 70%)',
             transform: `scale(${shadowS * (1 + pulse * 0.03)}, ${shadowS})`,
@@ -53,8 +53,9 @@ export const SceneHero: React.FC = () => {
           style={{
             position: 'absolute',
             left: (WIDTH - SHOE_W) / 2,
-            top: GROUND_Y - 560,
+            bottom: HEIGHT - GROUND_Y - 18,
             width: SHOE_W,
+            transformOrigin: '50% 100%',
             transform: `translate(${x}px, ${drop}px) rotate(${tilt}deg) scale(${1 + pulse * 0.012})`,
             filter: `url(#mb-hero) drop-shadow(0 30px 40px rgba(0,0,0,0.5))`,
           }}
