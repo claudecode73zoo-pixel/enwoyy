@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Background} from '../components/Background';
 import {Particles} from '../components/Particles';
 import {COLORS, FONT_FAMILY, SPIN_COUNT, spinImage} from '../constants';
@@ -41,7 +41,7 @@ const SHOE_W = 1000;
 /** 9-12s : la paire tourne (vraies vues 360°), particules, « TN » géant qui défile. */
 export const SceneSpin: React.FC = () => {
   const frame = useCurrentFrame();
-  const {durationInFrames} = useVideoConfig();
+  const {durationInFrames, fps} = useVideoConfig();
   const pulse = beatPulse(frame);
 
   // Un tour complet, fluide, qui se termine sur le profil (raccord avec le plan final)
@@ -53,6 +53,8 @@ export const SceneSpin: React.FC = () => {
   const rotZ = interpolate(frame, [0, durationInFrames / 2, durationInFrames], [-5, 2, -2], {easing: easeInOut});
   const float = Math.sin(frame / 9) * 14;
   const appear = interpolate(frame, [0, 8], [0, 1], {extrapolateRight: 'clamp'});
+  const rise = (1 - spring({frame, fps, config: {damping: 12, stiffness: 110}})) * 520;
+  const drift = interpolate(frame, [0, durationInFrames], [-50, 50]);
   const img: React.CSSProperties = {width: '100%', display: 'block'};
 
   return (
@@ -67,7 +69,7 @@ export const SceneSpin: React.FC = () => {
             position: 'relative',
             width: SHOE_W,
             flexShrink: 0,
-            transform: `translateY(${float}px) rotate(${rotZ}deg) scale(${1 + pulse * 0.025})`,
+            transform: `translate(${drift}px, ${float + rise}px) rotate(${rotZ}deg) scale(${1 + pulse * 0.025})`,
             filter: `drop-shadow(0 50px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 ${30 + pulse * 40}px ${COLORS.orange}88)`,
           }}
         >

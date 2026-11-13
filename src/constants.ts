@@ -50,4 +50,15 @@ export const CLOSEUPS = [
   {word: 'ORANGE', image: IMAGES.semelle, focus: {x: 0.42, y: 0.84}, zoom: 2.3, duration: 2 * BEAT},
 ] as const;
 
-export const SLOGAN = 'Reste tuned.';
+// ---- Transitions : une par coupe, toutes calées sur un temps ----
+export type CutKind = 'flash' | 'whip-left' | 'whip-right' | 'whip-up' | 'bars' | 'wipe' | 'zoom';
+const closeup2 = SCENES.closeups.from + CLOSEUPS[0].duration;
+const closeup3 = closeup2 + CLOSEUPS[1].duration;
+export const CUTS: {at: number; kind: CutKind}[] = [
+  {at: SCENES.hero.from, kind: 'flash'}, // lignes -> profil
+  {at: SCENES.closeups.from, kind: 'whip-left'}, // profil -> AIR
+  {at: closeup2, kind: 'bars'}, // AIR -> TUNED
+  {at: closeup3, kind: 'whip-up'}, // TUNED -> ORANGE
+  {at: SCENES.spin.from, kind: 'wipe'}, // ORANGE -> rotation
+  {at: SCENES.outro.from, kind: 'zoom'}, // rotation -> plan final
+];

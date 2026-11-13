@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 
 /** Grain léger animé (bruit fractal, 12 images/s). */
-export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.14}) => {
+export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.1}) => {
   const frame = useCurrentFrame();
   const seed = Math.floor(frame / 2) % 12;
   return (

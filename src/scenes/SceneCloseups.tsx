@@ -1,9 +1,11 @@
 import React from 'react';
-import {AbsoluteFill, Img, interpolate, Sequence, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Img, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Background} from '../components/Background';
 import {Letters} from '../components/Letters';
 import {CLOSEUPS, COLORS} from '../constants';
-import {beatPulse, easeOut} from '../utils';
+import {beatPulse, easeOut, springVelocityBlur} from '../utils';
+
+const SLIDE = {damping: 14, stiffness: 130};
 
 type Closeup = (typeof CLOSEUPS)[number];
 
@@ -16,13 +18,33 @@ const Shot: React.FC<{c: Closeup; index: number}> = ({c, index}) => {
   const pulse = beatPulse(frame);
   const dir = index % 2 === 0 ? 1 : -1;
   const sway = interpolate(t, [0, 1], [-30 * dir, 30 * dir]);
+  // Entrée en translation : par la droite, la gauche, puis le bas
+  const {fps} = useVideoConfig();
+  const enter = 1 - spring({frame, fps, config: SLIDE});
+  const vertical = index === 2;
+  const slide = enter * 520 * (vertical ? 1 : dir);
+  const blur = springVelocityBlur(frame, SLIDE, 160);
   const wordSize = c.word.length > 4 ? 270 : 360;
 
   return (
     <AbsoluteFill>
       <Background x={index === 1 ? 30 : 70} y={index === 2 ? 40 : 55} intensity={0.9} />
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
-        <div style={{width: 1000, flexShrink: 0, transform: `translateX(${sway}px) scale(${zoom * (1 + pulse * 0.02)}) translate(${dx}%, ${dy}%)`}}>
+        <svg width="0" height="0" style={{position: 'absolute'}}>
+          <filter id={`mb-shot-${index}`} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation={vertical ? `0 ${blur}` : `${blur} 0`} />
+          </filter>
+        </svg>
+        <div
+          style={{
+            width: 1000,
+            flexShrink: 0,
+            filter: blur > 0.3 ? `url(#mb-shot-${index})` : undefined,
+            transform: `translate(${vertical ? sway : sway + slide}px, ${vertical ? slide : 0}px) scale(${
+              zoom * (1 + pulse * 0.02)
+            }) translate(${dx}%, ${dy}%)`,
+          }}
+        >
           <Img src={staticFile(c.image)} style={{width: '100%', display: 'block'}} />
         </div>
       </AbsoluteFill>
