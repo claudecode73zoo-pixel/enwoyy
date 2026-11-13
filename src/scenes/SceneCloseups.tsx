@@ -3,9 +3,9 @@ import {AbsoluteFill, Img, interpolate, Sequence, spring, staticFile, useCurrent
 import {Background} from '../components/Background';
 import {Letters} from '../components/Letters';
 import {CLOSEUPS, COLORS} from '../constants';
-import {beatPulse, easeOut, springVelocityBlur} from '../utils';
+import {easeOut, springVelocityBlur} from '../utils';
 
-const SLIDE = {damping: 14, stiffness: 130};
+const SLIDE = {damping: 20, stiffness: 130}; // glissé amorti, sans rebond
 
 type Closeup = (typeof CLOSEUPS)[number];
 
@@ -15,7 +15,6 @@ const Shot: React.FC<{c: Closeup; index: number}> = ({c, index}) => {
   const zoom = interpolate(t, [0, 1], [c.zoom * 0.9, c.zoom * 1.08]);
   const dx = (0.5 - c.focus.x) * 100;
   const dy = (0.5 - c.focus.y) * 100;
-  const pulse = beatPulse(frame);
   const dir = index % 2 === 0 ? 1 : -1;
   const sway = interpolate(t, [0, 1], [-30 * dir, 30 * dir]);
   // Entrée en translation : par la droite, la gauche, puis le bas
@@ -41,7 +40,7 @@ const Shot: React.FC<{c: Closeup; index: number}> = ({c, index}) => {
             flexShrink: 0,
             filter: blur > 0.3 ? `url(#mb-shot-${index})` : undefined,
             transform: `translate(${vertical ? sway : sway + slide}px, ${vertical ? slide : 0}px) scale(${
-              zoom * (1 + pulse * 0.02)
+              zoom
             }) translate(${dx}%, ${dy}%)`,
           }}
         >

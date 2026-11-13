@@ -4,8 +4,8 @@ import {BEAT, FPS} from './constants';
 export const easeOut = Easing.bezier(0.16, 1, 0.3, 1); // expo-like, fluide
 export const easeInOut = Easing.bezier(0.65, 0, 0.35, 1);
 
-/** Impulsion sur chaque temps (120 BPM) : 1 pile sur le temps, décroît ensuite. */
-export const beatPulse = (frame: number, decay = 4) => Math.exp(-(((frame % BEAT) + BEAT) % BEAT) / decay);
+/** Respiration douce calée sur le tempo (120 BPM) : 1 sur le temps, 0 entre deux, sans à-coup. */
+export const beatBreath = (frame: number) => 0.5 + 0.5 * Math.cos((2 * Math.PI * frame) / BEAT);
 
 /** Flou directionnel (px) proportionnel à la vitesse d'un spring. */
 export const springVelocityBlur = (

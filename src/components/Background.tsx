@@ -1,12 +1,12 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {COLORS} from '../constants';
-import {beatPulse} from '../utils';
+import {beatBreath} from '../utils';
 
-/** Fond noir + halo dégradé orange qui pulse sur chaque temps. */
+/** Fond noir + halo dégradé orange, avec une respiration très légère sur le tempo. */
 export const Background: React.FC<{intensity?: number; x?: number; y?: number}> = ({intensity = 1, x = 50, y = 62}) => {
   const frame = useCurrentFrame();
-  const pulse = 0.55 + 0.25 * beatPulse(frame);
+  const pulse = 0.68 + 0.05 * beatBreath(frame);
   return (
     <AbsoluteFill style={{backgroundColor: COLORS.black}}>
       <AbsoluteFill

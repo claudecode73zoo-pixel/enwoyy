@@ -24,11 +24,12 @@ export const IMAGES = {
   talon: 'tn-talon.png', // 3/4 arrière : bulle d'air + badge Tn
 } as const;
 
-// ---- Rotation 360° (36 vues détourées, public/tn-360/01.webp … 36.webp) ----
-export const SPIN_COUNT = 36;
+// ---- Rotation 360° : 108 vues détourées (36 photos + 2 vues intermédiaires calculées par paire) ----
+// public/tn-360/001.webp … 108.webp
+export const SPIN_COUNT = 108;
 export const spinImage = (index: number) => {
   const i = ((Math.round(index) % SPIN_COUNT) + SPIN_COUNT) % SPIN_COUNT;
-  return `tn-360/${String(i + 1).padStart(2, '0')}.webp`;
+  return `tn-360/${String(i + 1).padStart(3, '0')}.webp`;
 };
 
 // ---- Durées des scènes (en frames) ----

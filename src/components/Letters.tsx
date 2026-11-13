@@ -31,14 +31,14 @@ export const Letters: React.FC<Props> = ({text, start = 0, size, stagger = 2, co
       }}
     >
       {text.split('').map((ch, i) => {
-        const s = spring({frame: frame - start - i * stagger, fps, config: {damping: 11, stiffness: 220}});
+        const s = spring({frame: frame - start - i * stagger, fps, config: {damping: 20, stiffness: 200}});
         return (
           <span
             key={i}
             style={{
               display: 'inline-block',
               opacity: Math.min(1, s * 3),
-              transform: `translateY(${(1 - s) * 140}px) scale(${0.6 + 0.4 * s}) rotate(${(1 - s) * 8}deg)`,
+              transform: `translateY(${(1 - s) * 120}px) scale(${0.7 + 0.3 * s})`,
               filter: `blur(${(1 - s) * 14}px)`,
               ...(gradient
                 ? {backgroundImage: COLORS.gradient, WebkitBackgroundClip: 'text', color: 'transparent'}

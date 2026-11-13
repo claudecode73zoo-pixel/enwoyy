@@ -13,7 +13,7 @@ export const Particles: React.FC<{count?: number}> = ({count = 70}) => {
         const size = 4 + r('z') * 14;
         const y = (((r('y') * HEIGHT - frame * speed) % HEIGHT) + HEIGHT) % HEIGHT;
         const x = r('x') * WIDTH + Math.sin(frame / 14 + r('p') * 6) * 30;
-        const tw = 0.4 + 0.6 * Math.abs(Math.sin(frame / 6 + r('t') * 9));
+        const tw = 0.6 + 0.3 * Math.sin(frame / 12 + r('t') * 9); // scintillement lent, sans clignotement
         return (
           <div
             key={i}

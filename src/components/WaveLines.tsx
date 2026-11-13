@@ -1,7 +1,7 @@
 import React from 'react';
 import {interpolate, random, useCurrentFrame} from 'remotion';
 import {BEAT, COLORS, HEIGHT, WIDTH} from '../constants';
-import {beatPulse, easeInOut} from '../utils';
+import {easeInOut} from '../utils';
 
 const LINES = 13;
 const STEP = 18;
@@ -17,7 +17,6 @@ type Props = {
 /** Lignes orange ondulées, rappel des nervures de la TN. */
 export const WaveLines: React.FC<Props> = ({passThrough = true, amplitude = 1, id}) => {
   const frame = useCurrentFrame();
-  const pulse = beatPulse(frame);
   return (
     <svg width={WIDTH} height={HEIGHT} style={{position: 'absolute', filter: `drop-shadow(0 0 18px ${COLORS.orange})`}}>
       <defs>
@@ -36,7 +35,7 @@ export const WaveLines: React.FC<Props> = ({passThrough = true, amplitude = 1, i
           easing: easeInOut,
         });
         const trail = passThrough ? 500 + random(`t${i}`) * 400 : Infinity;
-        const amp = (50 + random(`a${i}`) * 70) * amplitude * (1 + pulse * 0.25);
+        const amp = (50 + random(`a${i}`) * 70) * amplitude;
         const k = 0.008 + random(`k${i}`) * 0.006;
         const phase = frame * 0.22 * dir + i;
         const pts: string[] = [];
@@ -53,7 +52,7 @@ export const WaveLines: React.FC<Props> = ({passThrough = true, amplitude = 1, i
             d={pts.join(' ')}
             fill="none"
             stroke={`url(#${id})`}
-            strokeWidth={5 + pulse * 5 + (i % 3)}
+            strokeWidth={7 + (i % 3)}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
