@@ -1,44 +1,64 @@
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {Background} from '../components/Background';
+import {Smoke} from '../components/Atmosphere';
 import {Particles} from '../components/Particles';
-import {COLORS, FONT_FAMILY, SPIN_COUNT, spinImage} from '../constants';
+import {Label, Tape} from '../components/Type';
+import {COLORS, FONT_FAMILY, SAFE, SPIN_COUNT, SPIN_RATIO, spinImage, WIDTH} from '../constants';
 import {easeInOut} from '../utils';
 
-const BigTN: React.FC<{y: number; dir: 1 | -1; fill?: boolean; speed: number}> = ({y, dir, fill, speed}) => {
+const SHOE_W = 980;
+const CENTER_Y = 900;
+const TAPE_TEXT = 'AIR MAX PLUS   •   TN   •   SUNSET';
+
+/** « TN » géant, plein et très discret, qui défile derrière la paire. */
+const BigTN: React.FC = () => {
   const frame = useCurrentFrame();
-  const unit = 1180; // largeur d'un motif « TN »
-  const x = -((frame * speed) % unit) * dir - (dir === 1 ? 0 : unit);
   return (
     <div
       style={{
         position: 'absolute',
-        top: y,
+        top: 420,
         left: 0,
-        display: 'flex',
         whiteSpace: 'nowrap',
-        transform: `translateX(${x}px)`,
+        transform: `translateX(${-frame * 9}px)`,
         fontFamily: FONT_FAMILY,
         fontSize: 1000,
         lineHeight: 0.9,
-        letterSpacing: 20,
-        color: fill ? `${COLORS.orange}30` : 'transparent',
-        WebkitTextStroke: fill ? '0px' : `4px ${COLORS.orange}`,
-        opacity: fill ? 1 : 0.5,
+        letterSpacing: 30,
+        color: `${COLORS.orange}26`,
       }}
     >
-      {[0, 1, 2, 3].map((i) => (
-        <span key={i} style={{width: unit, flexShrink: 0}}>
-          TN
-        </span>
-      ))}
+      TN TN TN TN
     </div>
   );
 };
 
-const SHOE_W = 1000;
+/** Anneau d'orbite en perspective ; `front` ne dessine que la moitié qui passe devant la paire. */
+const Orbit: React.FC<{rx: number; ry: number; front?: boolean; speed: number; appear: number}> = ({rx, ry, front, speed, appear}) => {
+  const frame = useCurrentFrame();
+  const cx = WIDTH / 2;
+  const cy = CENTER_Y + 150;
+  const d = front
+    ? `M ${cx - rx} ${cy} A ${rx} ${ry} 0 0 0 ${cx + rx} ${cy}`
+    : `M ${cx - rx} ${cy} A ${rx} ${ry} 0 0 1 ${cx + rx} ${cy}`;
+  return (
+    <svg style={{position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible'}}>
+      <path
+        d={d}
+        fill="none"
+        stroke={front ? COLORS.orangeLight : COLORS.orange}
+        strokeWidth={front ? 5 : 3}
+        strokeLinecap="round"
+        strokeDasharray="70 34"
+        strokeDashoffset={frame * speed * (front ? 1 : -1)}
+        opacity={(front ? 0.95 : 0.4) * appear}
+        style={{filter: `drop-shadow(0 0 10px ${COLORS.orange})`}}
+      />
+    </svg>
+  );
+};
 
-/** 9-12s : la paire tourne (vraies vues 360°), particules, « TN » géant qui défile. */
+/** 9-12s : tour complet de la paire (108 vues), anneaux d'orbite, rubans et « TN » géant. */
 export const SceneSpin: React.FC = () => {
   const frame = useCurrentFrame();
   const {durationInFrames, fps} = useVideoConfig();
@@ -47,35 +67,72 @@ export const SceneSpin: React.FC = () => {
   const pos = interpolate(frame, [0, durationInFrames - 1], [0, SPIN_COUNT], {easing: easeInOut});
   const base = Math.floor(pos);
   const mix = pos - base; // fondu entre deux vues voisines (3,3° d'écart) : rotation continue
+  const degrees = Math.round((pos / SPIN_COUNT) * 360);
 
-  const rotZ = interpolate(frame, [0, durationInFrames], [-4, 0], {easing: easeInOut});
-  const appear = interpolate(frame, [0, 8], [0, 1], {extrapolateRight: 'clamp'});
-  const rise = (1 - spring({frame, fps, config: {damping: 20, stiffness: 110}})) * 520;
-  const drift = interpolate(frame, [0, durationInFrames], [-50, 50]);
+  const enter = spring({frame, fps, config: {damping: 20, stiffness: 110}});
+  const rise = (1 - enter) * 520;
   const img: React.CSSProperties = {width: '100%', display: 'block'};
+  const reflect: React.CSSProperties = {
+    ...img,
+    position: 'absolute',
+    left: 0,
+    top: '100%',
+    marginTop: -26,
+    transform: 'scaleY(-1)',
+    filter: 'blur(2.5px)',
+    WebkitMaskImage: 'linear-gradient(to top, #000 0%, transparent 48%)',
+    maskImage: 'linear-gradient(to top, #000 0%, transparent 48%)',
+  };
 
   return (
-    <AbsoluteFill>
-      <Background y={50} />
-      <BigTN y={120} dir={1} speed={14} fill />
-      <BigTN y={900} dir={-1} speed={20} />
-      <Particles />
-      <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', opacity: appear}}>
+    <AbsoluteFill style={{backgroundColor: COLORS.black}}>
+      <Smoke seed="spin" />
+      <BigTN />
+      <Tape text={TAPE_TEXT} y={356} angle={-7} speed={-7} />
+      <Tape text={TAPE_TEXT} y={1470} angle={5} speed={7} variant="dark" />
+      <Particles count={46} />
+
+      <Orbit rx={540} ry={120} speed={3} appear={enter} />
+      <Orbit rx={450} ry={92} speed={-2} appear={enter} />
+      <div
+        style={{
+          position: 'absolute',
+          left: (WIDTH - SHOE_W) / 2,
+          top: CENTER_Y - (SHOE_W * SPIN_RATIO) / 2,
+          width: SHOE_W,
+          opacity: Math.min(1, enter * 2),
+          transform: `translateY(${rise}px)`,
+        }}
+      >
+        {/* ombre de contact */}
         <div
           style={{
-            position: 'relative',
-            width: SHOE_W,
-            flexShrink: 0,
-            transform: `translate(${drift}px, ${rise}px) rotate(${rotZ}deg)`,
-            filter: `drop-shadow(0 50px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 40px ${COLORS.orange}88)`,
+            position: 'absolute',
+            left: '8%',
+            right: '8%',
+            bottom: -24,
+            height: 80,
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 70%)',
           }}
-        >
+        />
+        <Img src={staticFile(spinImage(base))} style={{...reflect, opacity: 0.22}} />
+        <div style={{position: 'relative', filter: `saturate(1.08) contrast(1.04) drop-shadow(0 18px 24px rgba(0,0,0,0.55))`}}>
           <Img src={staticFile(spinImage(base))} style={img} />
           {mix > 0.02 ? (
             <Img src={staticFile(spinImage(base + 1))} style={{...img, position: 'absolute', inset: 0, opacity: mix}} />
           ) : null}
         </div>
-      </AbsoluteFill>
+      </div>
+      <Orbit rx={540} ry={120} speed={3} appear={enter} front />
+      <Orbit rx={450} ry={92} speed={-2} appear={enter} front />
+
+      <div style={{position: 'absolute', left: SAFE.left, top: SAFE.top + 10, display: 'flex', alignItems: 'baseline', gap: 20}}>
+        <Label text="ROTATION" size={34} color={COLORS.white} />
+        <div style={{fontFamily: FONT_FAMILY, fontSize: 64, color: COLORS.orangeLight, lineHeight: 1, minWidth: 150}}>
+          {String(degrees).padStart(3, '0')}°
+        </div>
+      </div>
     </AbsoluteFill>
   );
 };

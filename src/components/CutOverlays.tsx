@@ -5,20 +5,43 @@ import {cutNearness} from './CameraFX';
 import {Wipe} from './Wipe';
 
 /** Flash blanc -> orange centré sur la coupe. */
-const Flash: React.FC<{at: number; strength?: number; decay?: number}> = ({at, strength = 1, decay = BEAT}) => {
+const Flash: React.FC<{at: number; strength?: number; decay?: number; y?: number}> = ({at, strength = 1, decay = BEAT, y = 46}) => {
   const frame = useCurrentFrame();
   const o = interpolate(frame, [at - 5, at, at + decay], [0, strength, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  if (o <= 0) return null;
+  // le trait de lumière horizontal reste un peu plus longtemps que le flash
+  const streak = interpolate(frame, [at - 3, at, at + decay * 1.6], [0, 1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  if (o <= 0 && streak <= 0) return null;
   return (
-    <AbsoluteFill
-      style={{
-        opacity: o,
-        background: `radial-gradient(circle at 50% 50%, #fff 0%, ${COLORS.orangeLight} 45%, ${COLORS.orange} 100%)`,
-      }}
-    />
+    <>
+      <AbsoluteFill
+        style={{
+          opacity: o,
+          background: `radial-gradient(circle at 50% ${y}%, #fff 0%, ${COLORS.orangeLight} 45%, ${COLORS.orange} 100%)`,
+        }}
+      />
+      <AbsoluteFill style={{opacity: streak * strength, mixBlendMode: 'screen'}}>
+        <div
+          style={{
+            position: 'absolute',
+            left: '-20%',
+            right: '-20%',
+            top: `${y}%`,
+            height: 14,
+            marginTop: -7,
+            borderRadius: 7,
+            background: `linear-gradient(90deg, transparent, ${COLORS.orangeLight} 25%, #fff 50%, ${COLORS.orangeLight} 75%, transparent)`,
+            boxShadow: `0 0 60px 18px ${COLORS.orange}`,
+            transform: `scaleX(${0.5 + 0.5 * streak})`,
+          }}
+        />
+      </AbsoluteFill>
+    </>
   );
 };
 

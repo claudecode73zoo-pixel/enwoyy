@@ -1,7 +1,6 @@
 import React from 'react';
-import {interpolate, random, useCurrentFrame} from 'remotion';
+import {Easing, interpolate, random, useCurrentFrame} from 'remotion';
 import {BEAT, COLORS, HEIGHT, WIDTH} from '../constants';
-import {easeInOut} from '../utils';
 
 const LINES = 13;
 const STEP = 18;
@@ -27,14 +26,15 @@ export const WaveLines: React.FC<Props> = ({passThrough = true, amplitude = 1, i
       </defs>
       {Array.from({length: LINES}).map((_, i) => {
         const baseY = HEIGHT * 0.12 + (i / (LINES - 1)) * HEIGHT * 0.76;
-        const delay = Math.floor(random(`d${i}`) * 3) * BEAT * 0.5;
+        const delay = Math.floor(random(`d${i}`) * 3) * BEAT * 0.3;
         const dir = i % 2 === 0 ? 1 : -1;
-        const head = interpolate(frame, [delay, delay + BEAT * 3.2], [-200, WIDTH + 700], {
+        // départ rapide (les lignes sont à l'écran dès les premières images), puis ralentissement
+        const head = interpolate(frame, [delay, delay + BEAT * 3], [-100, WIDTH + 900], {
           extrapolateLeft: 'clamp',
           extrapolateRight: 'clamp',
-          easing: easeInOut,
+          easing: Easing.out(Easing.cubic),
         });
-        const trail = passThrough ? 500 + random(`t${i}`) * 400 : Infinity;
+        const trail = passThrough ? 700 + random(`t${i}`) * 500 : Infinity;
         const amp = (50 + random(`a${i}`) * 70) * amplitude;
         const k = 0.008 + random(`k${i}`) * 0.006;
         const phase = frame * 0.22 * dir + i;
